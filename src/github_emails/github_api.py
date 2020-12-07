@@ -19,16 +19,18 @@ limitations under the License.
 """
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Optional, List, Dict
-from wechaty_puppet import get_logger
-from github import Github, PaginatedList
+from typing import Optional, Dict
+from wechaty_puppet import get_logger   # type: ignore
+from github import Github
+from github_emails.access_limit import check_for_limit
 
-
+# pylint: disable=invalid-name
 logger = get_logger(__name__)
 
 
 @dataclass
 class GithubOptions:
+    """github options"""
     username: Optional[str] = None
     password: Optional[str] = None
 
@@ -36,11 +38,13 @@ class GithubOptions:
 
 
 class GithubApi:
+    """Github Restful Api"""
     def __init__(self, options: GithubOptions):
+        """initialization for github client"""
         if not options.token:
             self.github: Github = Github(login_or_token=options.token)
         elif not options.username and not options.password:
-            self.github: Github = Github(
+            self.github = Github(
                 login_or_token=options.username,
                 password=options.password
             )
@@ -49,34 +53,38 @@ class GithubApi:
 
     def get_user_email(self, user: str) -> Optional[str]:
         """get github open email by user name"""
-        logger.info(f'get_user_email({user})')
+        logger.info('get_user_email(%s)', user)
 
         # 1. get login_user
         login_user = self.github.get_user(user)
+        check_for_limit(login_user)
+
         if not login_user:
             raise ValueError(f'User<{user}> not found')
 
         # 2. get public events
-        events: PaginatedList = login_user.get_public_events()
-        for event in events:
-            if event.type == "PushEvent":
+        events = login_user.get_public_events()
+        for event in iter(events):
+            check_for_limit(event)
+            if event.type == 'PushEvent':
                 payload: dict = event.payload
-                assert 'commits' in payload
-                commit = payload['commits']
-                assert 'author' in commit
-                author = commit['author']
-                assert 'email' in author
-                return author['email']
+                if 'commits' in payload:
+                    commits = payload['commits']
+                    if commits and 'author' in commits[0]:
+                        author = commits[0]
+                        if 'email' in author:
+                            return author['email']
         return None
 
     def get_repo_star_emails(self, owner: str, repo: str) -> Dict[str, str]:
         """get the star email list from the specific repo"""
-        logger.info(f'get_repo_star_emails({owner}, {repo})')
-        repo = self.github.get_repo(f'{owner}/{repo}')
+        logger.info('get_repo_star_emails(%s, %s)', owner, repo)
+        repository = self.github.get_repo(f'{owner}/{repo}')
+        check_for_limit(repository)
 
         user_emails: Dict[str, str] = {}
-        for stargazer in repo.get_stargazers():
-            email = stargazer.email
+        for stargazer in iter(repository.get_stargazers()):
+            email: Optional[str] = stargazer.email
             if not email:
                 email = self.get_user_email(stargazer.login)
             if email:

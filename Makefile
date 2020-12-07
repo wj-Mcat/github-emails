@@ -72,11 +72,11 @@ code:
 
 .PHONY: run
 run:
-	python3 bin/run.py
+	python bin/run.py
 
 .PHONY: dist
 dist:
-	python3 setup.py sdist bdist_wheel
+	python setup.py sdist bdist_wheel
 
 .PHONY: publish
 publish:

@@ -20,11 +20,12 @@ limitations under the License.
 from __future__ import annotations
 
 from argparse import ArgumentParser
-from github_emails import GithubApi, GithubOptions
 from pprint import pprint
+from github_emails import GithubApi, GithubOptions
 
 
 def main():
+    """command interface"""
     parser = ArgumentParser()
     parser.add_argument('--owner', type=str, help='the repo of the user', required=True)
     parser.add_argument('--repo', type=str, help='the name of repo', required=True)
