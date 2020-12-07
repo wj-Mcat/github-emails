@@ -1,4 +1,4 @@
-# your-package-name [![PyPI Version](https://img.shields.io/pypi/v/wechaty?color=blue)](https://pypi.org/project/wechaty/) [![PyPI GitHub Actions](https://github.com/wechaty/python-wechaty/workflows/PyPI/badge.svg)](https://github.com/wechaty/python-wechaty/actions?query=workflow%3APyPI)
+# github-emails [![PyPI Version](https://img.shields.io/pypi/v/wechaty?color=blue)](https://pypi.org/project/wechaty/) [![PyPI GitHub Actions](https://github.com/wechaty/python-wechaty/workflows/PyPI/badge.svg)](https://github.com/wechaty/python-wechaty/actions?query=workflow%3APyPI)
 
 [![Python Wechaty Getting Started](https://img.shields.io/badge/Python%20Wechaty-Getting%20Started-blue)](https://github.com/wechaty/python-wechaty-getting-started)
 [![Python 3.7](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/release/python-370/)

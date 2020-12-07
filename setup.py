@@ -60,15 +60,15 @@ def get_install_requires() -> str:
 
 
 setuptools.setup(
-    name='your-package-name',
+    name='github-emails',
     version=get_version(),
     author='wj-Mcat',
     author_email='wjmcater@gmail.com',
-    description='your package description',
+    description='💌 A tool to get email addresses by action types such as `starred`, `watching` or `fork` on GitHub repositories',
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     license='Apache-2.0',
-    url='your-repo-url',
+    url='https://github.com/wj-Mcat/github-emails',
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
     install_requires=get_install_requires(),

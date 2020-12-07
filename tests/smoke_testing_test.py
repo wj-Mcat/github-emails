@@ -14,5 +14,5 @@ import pytest   # type: ignore
 
 
 def test_smoke_testing() -> None:
-    """ your-package-name """
+    """ github_emails """
     assert pytest, 'should True'
