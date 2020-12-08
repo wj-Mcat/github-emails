@@ -6,8 +6,8 @@ from github_emails import GithubApi, GithubOptions
 
 def main():
     """test the `get emails` ability"""
-    github = GithubApi(options=GithubOptions(token='931fb50e71ef0b5508b6e8f8032132c0c2debafc'))
-    emails = github.get_repo_star_emails('wechaty', 'python-wechaty')
+    github = GithubApi(token='7685a7a6eb0b3e9c91cf66869a4721b53df2d468')
+    emails = github.get_repo_stargazers('wechaty', 'python-wechaty')
     pprint(emails)
 
 
