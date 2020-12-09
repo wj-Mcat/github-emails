@@ -1,32 +1,43 @@
-# github-emails [![PyPI Version](https://img.shields.io/pypi/v/wechaty?color=blue)](https://pypi.org/project/wechaty/) [![PyPI GitHub Actions](https://github.com/wechaty/python-wechaty/workflows/PyPI/badge.svg)](https://github.com/wechaty/python-wechaty/actions?query=workflow%3APyPI)
+# github-emails [![PyPI Version](https://img.shields.io/pypi/v/github-emails?color=blue)](https://pypi.org/project/github-emails/)  ![auto-publish-to-pypi](https://github.com/wj-Mcat/github-emails/workflows/auto-publish-to-pypi/badge.svg)
 
-[![Python Wechaty Getting Started](https://img.shields.io/badge/Python%20Wechaty-Getting%20Started-blue)](https://github.com/wechaty/python-wechaty-getting-started)
-[![Python 3.7](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/release/python-370/)
-[![Downloads](https://pepy.tech/badge/wechaty)](https://pepy.tech/project/wechaty)
-[![Wechaty in Python](https://img.shields.io/badge/Wechaty-Python-blue)](https://github.com/wechaty/python-wechaty)
+## Quick start
 
+- Installation
 
+```shell script
+pip install github-emails
+```
+
+- Simple Code
+
+```python
+from github_emails import GithubApi
+github = GithubApi(token='')
+stargazers = github.stargazers('wechaty', 'python-wechaty')
+for stargazer in stargazers:
+    github.emails(stargazer)
+```
+
+And you will find that your final email info is stored in `.github_info/user-email.txt` file.
+
+- Command
+
+```shell script
+
+```
 
 ## History
 
-### v0.6 (Jun 19, 2020)
+### v0.0.2 (Jun 19, 2020)
 
-- do something
+- works with token, and everything works well for me
 
-## Contributors
+### v0.0.1 (Jun 19, 2020)
 
-[![contributor](https://sourcerer.io/fame/huan/wechaty/python-wechaty/images/0)](https://sourcerer.io/fame/huan/wechaty/python-wechaty/links/0)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/python-wechaty/images/1)](https://sourcerer.io/fame/huan/wechaty/python-wechaty/links/1)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/python-wechaty/images/2)](https://sourcerer.io/fame/huan/wechaty/python-wechaty/links/2)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/python-wechaty/images/3)](https://sourcerer.io/fame/huan/wechaty/python-wechaty/links/3)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/python-wechaty/images/4)](https://sourcerer.io/fame/huan/wechaty/python-wechaty/links/4)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/python-wechaty/images/5)](https://sourcerer.io/fame/huan/wechaty/python-wechaty/links/5)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/python-wechaty/images/6)](https://sourcerer.io/fame/huan/wechaty/python-wechaty/links/6)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/python-wechaty/images/7)](https://sourcerer.io/fame/huan/wechaty/python-wechaty/links/7)
-
+- works with username/password & token authentication
 
 ## Copyright & License
 
-- Code & Docs © 2018 Orgnization Contributors <https://github.com/Organization>
+- Code & Docs © 2020 wj-Mcat <https://github.com/wj-Mcat>
 - Code released under the Apache-2.0 License
 - Docs released under Creative Commons

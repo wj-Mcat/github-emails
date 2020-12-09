@@ -80,7 +80,7 @@ setuptools.setup(
     version=get_version(),
     author='wj-Mcat',
     author_email='wjmcater@gmail.com',
-    description='💌 A tool to get email addresses by action types such as `starred`, `watching` or `fork` on GitHub repositories',
+    description='📫 A tool to get email addresses by action types such as `starred`, `watching` or `fork` on GitHub repositories',
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     license='Apache-2.0',
@@ -95,4 +95,9 @@ setuptools.setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
     ],
+    entry_points={
+          'console_scripts': [
+              'github-emails=github_emails.commands:main'
+          ]
+      }
 )
