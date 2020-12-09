@@ -20,8 +20,12 @@ limitations under the License.
 from __future__ import annotations
 
 from argparse import ArgumentParser
-from pprint import pprint
-from github_emails import GithubApi, GithubOptions
+from wechaty_puppet import get_logger   # type: ignore
+from github_emails import GithubApi
+from github_emails.config import CACHE_DIR, EMAIL_FILE
+
+# pylint: disable=invalid-name
+logger = get_logger(__name__)
 
 
 def main():
@@ -32,13 +36,11 @@ def main():
     parser.add_argument('--token', type=str, help='personal access token', required=True)
     args = parser.parse_args()
     github = GithubApi(
-        options=GithubOptions(token=args.token)
+        token=args.token
     )
-    emails = github.get_repo_star_emails(
-        owner=args.owner,
-        repo=args.repo
-    )
-    pprint(emails)
+    stargazers = github.stargazers(args.owner, args.repo)
+    github.emails(stargazers)
+    logger.info('email info has been saved into %s/%s', CACHE_DIR, EMAIL_FILE)
 
 
 if __name__ == '__main__':
