@@ -1,2 +1,3 @@
-PyGithub
 wechaty-puppet
+betterproto
+chatie-grpc

@@ -2,6 +2,9 @@
 
 ## Quick start
 
+> the example below: `wechaty` is the owner, `python-wechaty` is the name of repo
+> github: https://www.github.com/wechaty/python-wechaty
+
 - Installation
 
 ```shell script
@@ -23,7 +26,7 @@ And you will find that your final email info is stored in `.github_info/user-ema
 - Command
 
 ```shell script
-
+github-emails --owner=wechaty --repo=python-wechaty --token=your-token
 ```
 
 ## History
