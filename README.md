@@ -26,7 +26,7 @@ And you will find that your final email info is stored in `.github_info/user-ema
 - Command
 
 ```shell script
-github-emails --owner=wechaty --repo=python-wechaty --token=your-token --stargazer-file='.github_info/wechaty-python-wechaty-' --skip-user-emails-file=./user-emails.txt
+github-emails --owner=wechaty --repo=python-wechaty --token=your-token --stargazer-file='.github_info/wechaty-python-wechaty-' --skip-user-emails-file='./user-emails.txt'
 ```
 
 ## History
