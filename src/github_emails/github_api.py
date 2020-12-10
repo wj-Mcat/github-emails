@@ -95,7 +95,7 @@ class GithubApi:
         cache_dir = self._init_cache_dir()
 
         # 2. get info
-        repo_file = os.path.join(cache_dir, f'{owner}-{repo}-stargazers.json')
+        repo_file = os.path.join(cache_dir, f'{owner}-{repo}-stargazers.txt')
         while True:
             self._check_for_limit()
 
