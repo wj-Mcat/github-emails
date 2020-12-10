@@ -37,7 +37,13 @@ def main():
     parser.add_argument(
         '--stargazers-file',
         type=str, required=False,
-        help='find the emails base on stargazers file'
+        help='find the emails base on stargazers file',
+        default='./.github_info/'
+    )
+    parser.add_argument(
+        '--skip-user-emails-file',
+        type=str, required=False,
+        help='./user-emails.txt'
     )
     args = parser.parse_args()
     github = GithubApi(
