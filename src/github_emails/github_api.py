@@ -51,6 +51,15 @@ class GithubApi:
             'authorization': 'token ' + token
         }
 
+        self.user_email_cache: Dict[str, str] = {}
+        email_file = os.path.join(self._init_cache_dir(), EMAIL_FILE)
+        if os.path.exists(email_file):
+            with open(email_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    login_name, email = line.strip('\n').split()
+                    if login_name not in self.user_email_cache:
+                        self.user_email_cache[login_name] = email
+
     def _check_for_limit(self):
         """get the rate limit"""
         res = requests.get(f'{BASE_URL}/rate_limit', headers=self.headers)
@@ -133,7 +142,9 @@ class GithubApi:
             users = user
 
         for login_name in users:
-            self._get_user_email(login_name)
+            # find the user-email data in the cache
+            if login_name not in self.user_email_cache:
+                self._get_user_email(login_name)
 
         # get user from the file
         cache_dir = self._init_cache_dir()
@@ -192,6 +203,10 @@ class GithubApi:
                             # 2.2 find the user email, and save it to the file
                             email = commit['author']['email']
                             with open(repo_file, 'a+', encoding='utf-8') as f:
+
+                                # cache the <login_name>:<email>
+                                if login_name not in self.user_email_cache:
+                                    self.user_email_cache[login_name] = email
                                 f.write(f'{login_name}\t{email}\n')
                                 logger.info('find user<%s> email<%s>', login_name, email)
                                 return
