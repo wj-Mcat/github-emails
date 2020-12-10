@@ -34,6 +34,11 @@ def main():
     parser.add_argument('--owner', type=str, help='the repo of the user', required=True)
     parser.add_argument('--repo', type=str, help='the name of repo', required=True)
     parser.add_argument('--token', type=str, help='personal access token', required=True)
+    parser.add_argument(
+        '--stargazers-file',
+        type=str, required=False,
+        help='find the emails base on stargazers file'
+    )
     args = parser.parse_args()
     github = GithubApi(
         token=args.token
