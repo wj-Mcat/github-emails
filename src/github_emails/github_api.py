@@ -26,7 +26,12 @@ import os
 import requests
 from wechaty_puppet import get_logger  # type: ignore
 
-from github_emails.config import CACHE_DIR, EMAIL_FILE
+from github_emails.config import (
+    CACHE_DIR,
+    EMAIL_FILE,
+    SKIP_EMAIL_FILE,
+    ROOT_DIR
+)
 
 # pylint: disable=invalid-name
 logger = get_logger(__name__)
@@ -44,17 +49,20 @@ class GithubOptions:
 class GithubApi:
     """Github Restful Api"""
 
-    def __init__(self, token: str):
+    def __init__(self, token: Optional[str] = None):
         """initialization for github client"""
         self.headers = {
             'accept': 'application/vnd.github.v3+json',
-            'authorization': 'token ' + token
         }
 
+        if token:
+            self.headers['authorization'] = 'token ' + token
+
+        # if exist in user_email_cache, it will skip to fetch the user info
         self.user_email_cache: Dict[str, str] = {}
-        email_file = os.path.join(self._init_cache_dir(), EMAIL_FILE)
-        if os.path.exists(email_file):
-            with open(email_file, 'r', encoding='utf-8') as f:
+
+        if os.path.exists(SKIP_EMAIL_FILE):
+            with open(SKIP_EMAIL_FILE, 'r', encoding='utf-8') as f:
                 for line in f:
                     login_name, email = line.strip('\n').split()
                     if login_name not in self.user_email_cache:
@@ -74,8 +82,7 @@ class GithubApi:
     @staticmethod
     def _init_cache_dir() -> str:
         """init the cache data dir"""
-        root_dir = os.getcwd()
-        cache_dir = os.path.join(root_dir, CACHE_DIR)
+        cache_dir = os.path.join(ROOT_DIR, CACHE_DIR)
         if not os.path.exists(cache_dir):
             logger.info('init cache dir: <%s>', CACHE_DIR)
             os.mkdir(cache_dir)
@@ -85,11 +92,9 @@ class GithubApi:
                 f.write('')
         return cache_dir
 
-    def stargazers(self, owner: str, repo: str) -> List[str]:
+    def stargazers(self, owner: str, repo: str, page_index: int = 1) -> List[str]:
         """get the repo stargazers"""
         logger.info('stargazers(%s, %s)', owner, repo)
-
-        page_index = 1
 
         # 1. check for the temp dir
         cache_dir = self._init_cache_dir()
@@ -129,7 +134,9 @@ class GithubApi:
                 users = [line.strip('\n') for line in f.readlines()]
         return users
 
-    def emails(self, user: Union[str, List[str]]) -> Union[str, Dict[str, str], None]:
+    # pylint: disable=too-many-branches
+    def emails(self, user: Union[str, List[str]], exist_user_emails: Optional[Dict[str, str]] = None
+               ) -> Union[str, Dict[str, str], None]:
         """get user emails"""
         logger.info('emails(%s)', user)
 
@@ -140,6 +147,12 @@ class GithubApi:
             users = [user]
         else:
             users = user
+
+        users = [item.strip() for item in users]
+
+        # refresh the exist user_email cache
+        if exist_user_emails:
+            self.user_email_cache.update(exist_user_emails)
 
         for login_name in users:
             # find the user-email data in the cache
@@ -158,6 +171,11 @@ class GithubApi:
                     login_name, email = line.split('\t')
                     user_email[login_name] = email
 
+        if exist_user_emails:
+            for name, email in self.user_email_cache.items():
+                if name in user_email:
+                    user_email.pop(name)
+
         if isinstance(user, str):
             if user not in user_email:
                 return None
@@ -168,10 +186,10 @@ class GithubApi:
         """get user emails"""
         # 1. check for the temp dir
         cache_dir = self._init_cache_dir()
+        login_name = login_name.strip()
 
         # 2. get info
         repo_file = os.path.join(cache_dir, EMAIL_FILE)
-        self._check_for_limit()
         page_index = 1
 
         while True:
@@ -189,7 +207,7 @@ class GithubApi:
 
             if 'message' in events:
                 break
-            if not isinstance(events, list):
+            if not events or not isinstance(events, list):
                 break
 
             # 2.1 save the email info into local file
